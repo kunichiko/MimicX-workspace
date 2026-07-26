@@ -85,8 +85,8 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
 
 - protocol: **0.9.0** (正式版、v0.9.0 タグ済み。TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード)
 - firmware: **v1.1.0** (protocol 0.9 対応。タグ済み)
-- app: **v1.6.0** (protocol 0.9 対応、minMinor=7。dc92b55 にタグ済み。Windows BLE
-  再接続修正 = fork ceedf4d を同梱、実機確認済み)
+- app: **v1.6.1** (protocol 0.9 対応、minMinor=7。ゲームパッドのボタン割り当て +
+  L2/R2 対応を追加。v1.6.0 の Windows BLE 再接続修正 = fork ceedf4d を含む)
 
 app / firmware は同時にバージョンアップしない場合があるが、protocol minor を超える
 差は接続不可となる (app 側で `MinSupportedProtocol.meets()` 判定)。
