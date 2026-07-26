@@ -81,11 +81,13 @@ MimicX-firmware/tools/wchisp_flash.sh joystick
 DFU 検出までリトライするので操作タイミングに余裕がある。wchisp 実体は
 `~/.platformio/packages/tool-wchisp/wchisp` (PlatformIO 同梱、PATH には入っていない)。
 
-## バージョン整合性 (現時点 = 2026-07-21)
+## バージョン整合性 (現時点 = 2026-07-26)
 
-- protocol: **0.8.0** (正式版、v0.8.0 タグ済み)
-- firmware: **v1.0.0** (protocol 0.8 対応。ESP32-S3 の USB-MIDI ブリッジ対応を含む)
-- app: **v1.5.1** (protocol 0.8 対応、minMinor=7)
+- protocol: **0.9.0** (正式版、v0.9.0 タグ済み。TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード)
+- firmware: **v1.1.0** (protocol 0.9 対応。タグ済み)
+- app: **v1.6.0** (protocol 0.9 対応、minMinor=7。main にリリースコミット済みだが
+  **タグは Windows BLE 修正の実機確認待ちで未 push**。確認が通ったら 8a44c04 に
+  v1.6.0 タグを打ち直す)
 
 app / firmware は同時にバージョンアップしない場合があるが、protocol minor を超える
 差は接続不可となる (app 側で `MinSupportedProtocol.meets()` 判定)。
