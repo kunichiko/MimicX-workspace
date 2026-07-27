@@ -85,8 +85,9 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
 
 - protocol: **0.9.0** (正式版、v0.9.0 タグ済み。TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード)
 - firmware: **v1.1.0** (protocol 0.9 対応。タグ済み)
-- app: **v1.6.1** (protocol 0.9 対応、minMinor=7。ゲームパッドのボタン割り当て +
-  L2/R2 対応を追加。v1.6.0 の Windows BLE 再接続修正 = fork ceedf4d を含む)
+- app: **v1.6.2** (protocol 0.9 対応、minMinor=7。Windows のボンド不一致
+  自動修復 = fork 5ca7830 を追加。v1.6.1 のパッドアサイン、v1.6.0 の
+  Windows BLE 再接続修正を含む)
 
 app / firmware は同時にバージョンアップしない場合があるが、protocol minor を超える
 差は接続不可となる (app 側で `MinSupportedProtocol.meets()` 判定)。
