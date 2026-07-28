@@ -85,10 +85,11 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
 
 - protocol: **0.9.0** (正式版、v0.9.0 タグ済み。TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード)
 - firmware: **v1.1.0** (protocol 0.9 対応。タグ済み)
-- app: **v1.6.4** (protocol 0.9 対応、minMinor=7。iOS/macOS の BLE 接続安定化 =
-  FlutterMidiCommand fork d2c6391 で connect タイムアウト + stale プルーニング。
-  Windows のボンド不一致自動修復 = flutter_midi_command_windows fork 95a3f6d、
-  v1.6.1 のパッドアサインを含む)
+- app: **v1.7.0** (protocol 0.9 対応、minMinor=7。Combined を両画面同時生存
+  (IndexedStack) に作り替え = 瞬時切替 + ゲームパッド/物理キーボード両画面対応、
+  LED オレンジ化解消。v1.6.4 の iOS/macOS BLE 接続安定化 = FlutterMidiCommand fork
+  d2c6391、Windows ボンド不一致自動修復 = flutter_midi_command_windows fork 95a3f6d、
+  v1.6.1 パッドアサインを含む。4 環境実機確認済み)
 
 ## フォーク依存 (pubspec の ref)
 
