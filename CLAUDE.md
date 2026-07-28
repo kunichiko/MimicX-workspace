@@ -81,23 +81,25 @@ MimicX-firmware/tools/wchisp_flash.sh joystick
 DFU 検出までリトライするので操作タイミングに余裕がある。wchisp 実体は
 `~/.platformio/packages/tool-wchisp/wchisp` (PlatformIO 同梱、PATH には入っていない)。
 
-## バージョン整合性 (現時点 = 2026-07-26)
+## バージョン整合性 (現時点 = 2026-07-28)
 
 - protocol: **0.9.0** (正式版、v0.9.0 タグ済み。TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード)
 - firmware: **v1.1.0** (protocol 0.9 対応。タグ済み)
 - app: **v1.7.0** (protocol 0.9 対応、minMinor=7。Combined を両画面同時生存
   (IndexedStack) に作り替え = 瞬時切替 + ゲームパッド/物理キーボード両画面対応、
-  LED オレンジ化解消。v1.6.4 の iOS/macOS BLE 接続安定化 = FlutterMidiCommand fork
-  d2c6391、Windows ボンド不一致自動修復 = flutter_midi_command_windows fork 95a3f6d、
-  v1.6.1 パッドアサインを含む。4 環境実機確認済み)
+  LED オレンジ化解消。全 BLE プラグインで電源 OFF アダプタの一覧プルーニングを実装。
+  v1.6.x の iOS/macOS BLE 接続安定化・パッドアサインを含む。4 環境実機確認済み)
 
 ## フォーク依存 (pubspec の ref)
 
 - `flutter_midi_command` (iOS/macOS/Android): kunichiko/FlutterMidiCommand
-  `d2c6391` (fix/ble-connect-timeout) — SPM 対応 + Android 接続待ち除去 +
-  iOS/macOS の connect タイムアウト/stale プルーニング
+  `7ff32b3` (fix/ble-connect-timeout) — SPM 対応 + Android 接続待ち除去 +
+  iOS/macOS の connect タイムアウト/stale プルーニング + Android stale プルーニング
 - `flutter_midi_command_windows`: kunichiko/flutter_midi_command_windows
-  `95a3f6d` (fix/winmm-stability) — winmm 安定化 + BLE readiness + ボンド自動修復
+  `3bb2b88` (fix/winmm-stability) — winmm 安定化 + BLE readiness + 不在デバイスの
+  プルーニング/connect ガード。**ボンド自動修復 (自動 unpair) は撤去済み** —
+  アプリは Windows のペアリング状態を自動操作しない (誤 unpair→クラッシュ→
+  再ペアリング不能の連鎖事故のため)。ボンド不一致は案内ダイアログで手動対応
 
 app / firmware は同時にバージョンアップしない場合があるが、protocol minor を超える
 差は接続不可となる (app 側で `MinSupportedProtocol.meets()` 判定)。
