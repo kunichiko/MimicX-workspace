@@ -85,9 +85,18 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
 
 - protocol: **0.9.0** (正式版、v0.9.0 タグ済み。TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード)
 - firmware: **v1.1.0** (protocol 0.9 対応。タグ済み)
-- app: **v1.6.3** (protocol 0.9 対応、minMinor=7。Windows のボンド不一致
-  自動修復 = fork 95a3f6d、対象を MimicX アダプタに限定。v1.6.1 の
-  パッドアサイン、v1.6.0 の Windows BLE 再接続修正を含む)
+- app: **v1.6.4** (protocol 0.9 対応、minMinor=7。iOS/macOS の BLE 接続安定化 =
+  FlutterMidiCommand fork d2c6391 で connect タイムアウト + stale プルーニング。
+  Windows のボンド不一致自動修復 = flutter_midi_command_windows fork 95a3f6d、
+  v1.6.1 のパッドアサインを含む)
+
+## フォーク依存 (pubspec の ref)
+
+- `flutter_midi_command` (iOS/macOS/Android): kunichiko/FlutterMidiCommand
+  `d2c6391` (fix/ble-connect-timeout) — SPM 対応 + Android 接続待ち除去 +
+  iOS/macOS の connect タイムアウト/stale プルーニング
+- `flutter_midi_command_windows`: kunichiko/flutter_midi_command_windows
+  `95a3f6d` (fix/winmm-stability) — winmm 安定化 + BLE readiness + ボンド自動修復
 
 app / firmware は同時にバージョンアップしない場合があるが、protocol minor を超える
 差は接続不可となる (app 側で `MinSupportedProtocol.meets()` 判定)。
