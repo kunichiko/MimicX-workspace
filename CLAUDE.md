@@ -81,14 +81,16 @@ MimicX-firmware/tools/wchisp_flash.sh joystick
 DFU 検出までリトライするので操作タイミングに余裕がある。wchisp 実体は
 `~/.platformio/packages/tool-wchisp/wchisp` (PlatformIO 同梱、PATH には入っていない)。
 
-## バージョン整合性 (現時点 = 2026-07-28)
+## バージョン整合性 (現時点 = 2026-07-31)
 
 - protocol: **0.9.0** (正式版、v0.9.0 タグ済み。TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード)
 - firmware: **v1.1.0** (protocol 0.9 対応。タグ済み)
-- app: **v1.7.0** (protocol 0.9 対応、minMinor=7。Combined を両画面同時生存
-  (IndexedStack) に作り替え = 瞬時切替 + ゲームパッド/物理キーボード両画面対応、
-  LED オレンジ化解消。全 BLE プラグインで電源 OFF アダプタの一覧プルーニングを実装。
-  v1.6.x の iOS/macOS BLE 接続安定化・パッドアサインを含む。4 環境実機確認済み)
+- app: **v1.7.1** (protocol 0.9 対応、minMinor=7。**Windows のアイドル CPU 約8% を解消**
+  = `gamepads_windows` の sleepless ポーリングループに `Sleep(8)` を入れた fork に
+  差し替え (8.4%→0.5%、下記フォーク依存参照)。v1.7.0 の Combined 両画面同時生存
+  (IndexedStack, 瞬時切替 + ゲームパッド/物理キーボード両画面対応, LED オレンジ化解消)・
+  電源 OFF アダプタの一覧プルーニング・v1.6.x の iOS/macOS BLE 接続安定化を含む。
+  4 環境実機確認済み)
 
 ## フォーク依存 (pubspec の ref)
 
@@ -100,6 +102,15 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
   プルーニング/connect ガード。**ボンド自動修復 (自動 unpair) は撤去済み** —
   アプリは Windows のペアリング状態を自動操作しない (誤 unpair→クラッシュ→
   再ペアリング不能の連鎖事故のため)。ボンド不一致は案内ダイアログで手動対応
+- `gamepads_windows` (Windows のみ): kunichiko/gamepads (monorepo, `packages/gamepads_windows`)
+  `79a826e` (mimicx/winmm-busyloop-fix) — dependency_overrides で git url+path pin。
+  winmm ポーリングループ (`read_gamepad`) の sleepless busy-loop に `Sleep(8)` (~125Hz)
+  を追加し、ジョイスティック列挙時にアイドルで 1 コア張り付き = 約8% CPU だったのを
+  0.5% に解消。**winmm を維持する** — upstream の修正 (0.3.0) は WinRT/GameInput への
+  全面書き換えで `gameinput.dll` にロード時リンクし **Win10 で DLL 不在だと起動不能**
+  (+ ビルドに Windows SDK 26100+ 必須) になるため採用しない (`gamepads: 0.1.8` を
+  pin している理由そのもの)。イベント形式は winmm のまま不変なので `lib/gamepad_input.dart`
+  は無変更
 
 app / firmware は同時にバージョンアップしない場合があるが、protocol minor を超える
 差は接続不可となる (app 側で `MinSupportedProtocol.meets()` 判定)。
