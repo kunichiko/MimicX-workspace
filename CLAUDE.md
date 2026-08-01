@@ -81,16 +81,23 @@ MimicX-firmware/tools/wchisp_flash.sh joystick
 DFU 検出までリトライするので操作タイミングに余裕がある。wchisp 実体は
 `~/.platformio/packages/tool-wchisp/wchisp` (PlatformIO 同梱、PATH には入っていない)。
 
-## バージョン整合性 (現時点 = 2026-07-31)
+## バージョン整合性 (現時点 = 2026-08-01)
 
 - protocol: **0.9.0** (正式版、v0.9.0 タグ済み。TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード)
 - firmware: **v1.1.0** (protocol 0.9 対応。タグ済み)
-- app: **v1.7.1** (protocol 0.9 対応、minMinor=7。**Windows のアイドル CPU 約8% を解消**
-  = `gamepads_windows` の sleepless ポーリングループに `Sleep(8)` を入れた fork に
-  差し替え (8.4%→0.5%、下記フォーク依存参照)。v1.7.0 の Combined 両画面同時生存
+- app: **v1.7.2** (protocol 0.9 対応、minMinor=7。**Windows で MSVC ランタイムを app-local
+  同梱** = VC++ 2015-2022 再頒布可能パッケージ未インストールの素の Windows で
+  `mimicx.exe` が「VCRUNTIME140_1.dll が見つからない」で起動できない問題を解消。
+  `windows/CMakeLists.txt` に `InstallRequiredSystemLibraries` を追加し、Flutter の
+  install 時に `VCRUNTIME140.dll` / `VCRUNTIME140_1.dll` / `MSVCP140.dll` 等を exe と
+  同じ Release フォルダへコピー。Inno Setup は Release 配下を丸ごと拾うので `.iss` /
+  workflow は無変更、portable zip・installer 両方に反映。Universal CRT は Windows 10+
+  が OS 標準で持つため非同梱。`PrivilegesRequired=lowest` の per-user インストールと
+  両立 (管理者昇格不要)。Windows 実機で起動中プロセスが app-local から
+  `VCRUNTIME140_1.dll` を読むことを確認済み。v1.7.1 の Windows アイドル CPU 約8% 解消
+  (`gamepads_windows` fork に `Sleep(8)`)・v1.7.0 の Combined 両画面同時生存
   (IndexedStack, 瞬時切替 + ゲームパッド/物理キーボード両画面対応, LED オレンジ化解消)・
-  電源 OFF アダプタの一覧プルーニング・v1.6.x の iOS/macOS BLE 接続安定化を含む。
-  4 環境実機確認済み)
+  電源 OFF アダプタの一覧プルーニング・v1.6.x の iOS/macOS BLE 接続安定化を含む)
 
 ## フォーク依存 (pubspec の ref)
 
