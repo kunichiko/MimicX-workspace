@@ -102,8 +102,12 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
 ## フォーク依存 (pubspec の ref)
 
 - `flutter_midi_command` (iOS/macOS/Android): kunichiko/FlutterMidiCommand
-  `7ff32b3` (fix/ble-connect-timeout) — SPM 対応 + Android 接続待ち除去 +
-  iOS/macOS の connect タイムアウト/stale プルーニング + Android stale プルーニング
+  `6c343c0` (fix/ble-connect-timeout) — SPM 対応 + Android 接続待ち除去 +
+  iOS/macOS の connect タイムアウト/stale プルーニング + Android stale プルーニング +
+  **iOS/macOS の MethodChannel 二重応答の解消** (`disconnectDevice` の末尾に
+  無条件の `result(nil)` があり必ず 2 回応答していた / native・virtual の接続成功時に
+  `ongoingConnections` を消していなかった)。修正前は起動時の識別フローの切断ごとに
+  "Message responses can be sent only once" がログに出ていた
 - `flutter_midi_command_windows`: kunichiko/flutter_midi_command_windows
   `3bb2b88` (fix/winmm-stability) — winmm 安定化 + BLE readiness + 不在デバイスの
   プルーニング/connect ガード。**ボンド自動修復 (自動 unpair) は撤去済み** —
