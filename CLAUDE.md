@@ -83,7 +83,11 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
 
 ## バージョン整合性 (現時点 = 2026-08-01)
 
-- protocol: **0.9.0** (正式版、v0.9.0 タグ済み。TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード)
+- protocol: **0.10.0** (main にコミット済み、**タグ未**。BRIDGE_REBOOT_BOOTLOADER 0x0C
+  §6.4.6 を追加 — ブリッジ (ESP32) を ROM ダウンロードモードで再起動させる開発者向け
+  コマンド。マジック "BOT" 必須。ブリッジ自答なので CH32 の実装は不要で、CH32 が申告する
+  protocol_version の 0.10 追従は次回 firmware リリースに同乗させればよい。
+  0.9.0 = TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード、v0.9.0 タグ済み)
 - firmware: **v1.1.0** (protocol 0.9 対応。タグ済み)
 - app: **v1.7.2** (protocol 0.9 対応、minMinor=7。**Windows で MSVC ランタイムを app-local
   同梱** = VC++ 2015-2022 再頒布可能パッケージ未インストールの素の Windows で
