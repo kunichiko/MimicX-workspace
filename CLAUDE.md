@@ -126,6 +126,19 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
   (+ ビルドに Windows SDK 26100+ 必須) になるため採用しない (`gamepads: 0.1.8` を
   pin している理由そのもの)。イベント形式は winmm のまま不変なので `lib/gamepad_input.dart`
   は無変更
+- `gamepads_darwin` (macOS のみ): kunichiko/gamepads (monorepo, `packages/gamepads_darwin`)
+  `c6dd3b8` (mimicx/darwin-background-events) — `GCController.shouldMonitorBackgroundEvents
+  = true` を立てて **最前面でなくてもゲームパッド入力を受け取る**。macOS Big Sur 11.3
+  以降の既定は NO で、非フォアグラウンドでは入力が一切配送されない。別アプリ
+  (RetroCastX = 実機のアナログRGB映像を Mac に表示する自作アプリ) の画面を見ながら
+  パッドで実機を操作するために必要。Dart 側は無変更
+  - **ref が `gamepads_windows` と別なのは意図的**。windows は winmm 実装を維持するため
+    `79a826e` (古い upstream 系列) に留める必要があり、darwin は upstream main 系列で
+    ないと 0.1.2+4 の `getFixedKey` (Switch Pro の +/- が `buttonMenu`/`buttonOptions`
+    で飛ぶ修正) が入らない。0.1.2+2 に落とすと**プロコンの + = MD6B START が効かなくなる**
+  - 両フォークとも `resolution: workspace` を除去済み。これが残っていると git+path
+    参照時にモノレポ全体のワークスペース解決に巻き込まれ、host の pubspec.lock が
+    広範囲にダウングレードされる
 
 app / firmware は同時にバージョンアップしない場合があるが、protocol minor を超える
 差は接続不可となる (app 側で `MinSupportedProtocol.meets()` 判定)。
