@@ -89,7 +89,21 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
   protocol_version の 0.10 追従は次回 firmware リリースに同乗させればよい。
   0.9.0 = TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード、v0.9.0 タグ済み)
 - firmware: **v1.1.0** (protocol 0.9 対応。タグ済み)
-- app: **v1.7.2** (protocol 0.9 対応、minMinor=7。**Windows で MSVC ランタイムを app-local
+- app: **v1.8.0** (pubspec を 1.8.0+33 に更新、**タグ未**。TestFlight 検証待ち。
+  protocol 0.9 対応、minMinor=7。**macOS のリモート入力とゲームパッド背景動作**を追加 =
+  別アプリ (RetroCastX) の画面を見ながら X68000 を操作できるようにする。
+  (a) `gamepads_darwin` フォークで `shouldMonitorBackgroundEvents` を有効化し、
+  最前面でなくてもパッド入力を受け取る。(b) 仮想 MIDI 宛先 `MimicX Remote Input` を
+  公開し、別アプリから転送された物理キーをローカルのキーボードと同じ経路で実機へ送る
+  (`protocol.dart` の sub-id 0x02。USB HID usage を 7bit×4 で受け、
+  `PhysicalKeyboardKey.findKeyByCode()` から既存の `_physicalKeyMap` に直結)。
+  RetroCastX 側の実装指示書は `RetroCastX/docs/mimicx-remote-input.md`。
+  **識別スキャンから own-virtual を除外**しないと自分の仮想ポートを叩いて接続を壊す点に注意。
+  あわせて方向判定を十字キー/スティックで独立化 + デッドゾーン、操作画面での BLE
+  スキャン停止、ダイアログ表示中の接続喪失で Navigator が壊れる不具合の修正、
+  flutter_midi_command フォークを 6c343c0 へ更新を含む。
+  **iOS / Android / Windows 未確認**)
+- app v1.7.2 (旧): **Windows で MSVC ランタイムを app-local
   同梱** = VC++ 2015-2022 再頒布可能パッケージ未インストールの素の Windows で
   `mimicx.exe` が「VCRUNTIME140_1.dll が見つからない」で起動できない問題を解消。
   `windows/CMakeLists.txt` に `InstallRequiredSystemLibraries` を追加し、Flutter の
