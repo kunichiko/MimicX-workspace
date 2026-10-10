@@ -83,20 +83,21 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
 
 ## バージョン整合性 (現時点 = 2026-08-01)
 
-- protocol: **0.10.0** (main にコミット済み、**タグ未**。BRIDGE_REBOOT_BOOTLOADER 0x0C
+- protocol: **0.10.0** (v0.10.0 タグ済み。BRIDGE_REBOOT_BOOTLOADER 0x0C
   §6.4.6 を追加 — ブリッジ (ESP32) を ROM ダウンロードモードで再起動させる開発者向け
-  コマンド。マジック "BOT" 必須。ブリッジ自答なので CH32 の実装は不要で、CH32 が申告する
-  protocol_version の 0.10 追従は次回 firmware リリースに同乗させればよい。
+  コマンド。マジック "BOT" 必須。ブリッジ自答なので CH32 の実装は不要。無印 ESP32 は非対応。
+  CH32 が申告する protocol_version の 0.10 追従は、knownLatest=0.10 のアプリ (v1.8.0〜)
+  が行き渡ってから firmware で行う。
   0.9.0 = TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード、v0.9.0 タグ済み)
 - firmware: **v1.2.0** (protocol 0.9 申告のまま。タグ済み。USB VID/PID を pid.codes の
   正式値に切り替え = CH32 `0x1209:0x9210` (Mimic X) / ESP32-S3 ブリッジ `0x1209:0x9211`
   (Mimic X Bridge)。BRIDGE_REBOOT_BOOTLOADER の自答を含む (無印 ESP32 は該当レジスタが
   無いため UNKNOWN_COMMAND で非対応)。**protocol_version を 0.10 に上げていない**のは、
   上げると knownLatest=0.9 の現行アプリ全版で接続ごとに「新しいプロトコル」警告が出るため。
-  0.10 追従は app の knownLatest を上げてから。Web フラッシャーは v1.2.0 未満の bin を
+  0.10 追従は knownLatest=0.10 の app v1.8.0 が行き渡ってから。Web フラッシャーは v1.2.0 未満の bin を
   削除済みで、`docs/firmware/{index,esp32}.html` の `MIN_VERSION` で一覧から除外している)
 - app: **v1.8.0** (pubspec を 1.8.0+33 に更新、**タグ未**。TestFlight 検証待ち。
-  protocol 0.9 対応、minMinor=7。**macOS のリモート入力とゲームパッド背景動作**を追加 =
+  protocol 0.10 対応 (knownLatest=0.10、機能対応は不要で版数のみ)、minMinor=7。**macOS のリモート入力とゲームパッド背景動作**を追加 =
   別アプリ (RetroCastX) の画面を見ながら X68000 を操作できるようにする。
   (a) `gamepads_darwin` フォークで `shouldMonitorBackgroundEvents` を有効化し、
   最前面でなくてもパッド入力を受け取る。(b) 仮想 MIDI 宛先 `MimicX Remote Input` を
