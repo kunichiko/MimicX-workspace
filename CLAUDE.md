@@ -88,7 +88,13 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
   コマンド。マジック "BOT" 必須。ブリッジ自答なので CH32 の実装は不要で、CH32 が申告する
   protocol_version の 0.10 追従は次回 firmware リリースに同乗させればよい。
   0.9.0 = TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード、v0.9.0 タグ済み)
-- firmware: **v1.1.0** (protocol 0.9 対応。タグ済み)
+- firmware: **v1.2.0** (protocol 0.9 申告のまま。タグ済み。USB VID/PID を pid.codes の
+  正式値に切り替え = CH32 `0x1209:0x9210` (Mimic X) / ESP32-S3 ブリッジ `0x1209:0x9211`
+  (Mimic X Bridge)。BRIDGE_REBOOT_BOOTLOADER の自答を含む (無印 ESP32 は該当レジスタが
+  無いため UNKNOWN_COMMAND で非対応)。**protocol_version を 0.10 に上げていない**のは、
+  上げると knownLatest=0.9 の現行アプリ全版で接続ごとに「新しいプロトコル」警告が出るため。
+  0.10 追従は app の knownLatest を上げてから。Web フラッシャーは v1.2.0 未満の bin を
+  削除済みで、`docs/firmware/{index,esp32}.html` の `MIN_VERSION` で一覧から除外している)
 - app: **v1.8.0** (pubspec を 1.8.0+33 に更新、**タグ未**。TestFlight 検証待ち。
   protocol 0.9 対応、minMinor=7。**macOS のリモート入力とゲームパッド背景動作**を追加 =
   別アプリ (RetroCastX) の画面を見ながら X68000 を操作できるようにする。
