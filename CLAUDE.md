@@ -80,8 +80,9 @@ MimicX-firmware/tools/wchisp_flash.sh joystick
 
 DFU 検出までリトライするので操作タイミングに余裕がある。wchisp 実体は
 `~/.platformio/packages/tool-wchisp/wchisp` (PlatformIO 同梱、PATH には入っていない)。
+書き込み完了後は USB を一度挿し直さないとデバイスが再認識されない。
 
-## バージョン整合性 (現時点 = 2026-08-01)
+## バージョン整合性 (現時点 = 2026-10-11)
 
 - protocol: **0.10.0** (v0.10.0 タグ済み。BRIDGE_REBOOT_BOOTLOADER 0x0C
   §6.4.6 を追加 — ブリッジ (ESP32) を ROM ダウンロードモードで再起動させる開発者向け
@@ -89,7 +90,15 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
   CH32 が申告する protocol_version の 0.10 追従は、knownLatest=0.10 のアプリ (v1.8.0〜)
   が行き渡ってから firmware で行う。
   0.9.0 = TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード、v0.9.0 タグ済み)
-- firmware: **v1.2.0** (protocol 0.9 申告のまま。タグ済み。USB VID/PID を pid.codes の
+- firmware: **v1.2.1** (protocol 0.9 申告のまま。タグ済み。**FM TOWNS での MSX マウス
+  モード修正** = (1) STROBE 立ち上がり直後に DMA が D0-D3 を複数本同時に LOW へ落とすと
+  STROBE 入力に回り込んで偽エッジになり、DMA ポインタがずれて Y に X が読まれていた
+  (右移動が斜め右下になる)。MSX マウスモード時のみ TIM2 入力キャプチャにデジタル
+  フィルタ (約 2.7us) を追加。(2) TOWNS は 1 サイクル 4 nibble (2 falling) のため
+  3ms アイドルで累積を 0 クリアしており、読み取り直後の CC を取りこぼしていた。
+  報告済み分だけ差し引いて残りを持ち越す方式に変更。`-D MSX_DIAG` ビルドで STROBE
+  エッジ列を記録して SysEx (0x7D 0x44) でダンプする診断機能あり (CC 0x7F で記録開始)。
+  v1.2.0 = USB VID/PID を pid.codes の
   正式値に切り替え = CH32 `0x1209:0x9210` (Mimic X) / ESP32-S3 ブリッジ `0x1209:0x9211`
   (Mimic X Bridge)。BRIDGE_REBOOT_BOOTLOADER の自答を含む (無印 ESP32 は該当レジスタが
   無いため UNKNOWN_COMMAND で非対応)。**protocol_version を 0.10 に上げていない**のは、
