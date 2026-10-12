@@ -118,9 +118,9 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
   レポートをコピーできる。knownLatest=0.11。開発者の iPhone 15 Pro (iOS 27) では
   interval 30→15ms 受理 / 2M PHY / RTT 中央値 32ms で、報告者の遅延は未再現
   (報告者の計測結果待ち)。v1.8.0 は未タグのまま v1.9.0 に包含。
-  **ローカルの iOS ビルドは Xcode 27 だと deployment target 13.0 がエラーになる**ため
-  `DEVELOPER_DIR=/Applications/Xcode-16.4.app/Contents/Developer` を付けてビルドし、
-  `xcrun devicectl device install app` で実機へ入れる)
+  v1.9.0 リリース後に main で **最小 iOS を 15.0 に引き上げ済み (未リリース)** =
+  ITMS-90068 (2027-04 以降 15.0 未満は提出不可) 対応 + Xcode 27 が 13.0 をエラーに
+  するため。実機へは `fvm flutter build ios --release` → `xcrun devicectl device install app`)
 - app v1.8.0 (旧, 未タグ): pubspec 1.8.0+33。
   protocol 0.10 対応 (knownLatest=0.10、機能対応は不要で版数のみ)、minMinor=7。**macOS のリモート入力とゲームパッド背景動作**を追加 =
   別アプリ (RetroCastX) の画面を見ながら X68000 を操作できるようにする。
