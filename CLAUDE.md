@@ -82,15 +82,22 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
 `~/.platformio/packages/tool-wchisp/wchisp` (PlatformIO 同梱、PATH には入っていない)。
 書き込み完了後は USB を一度挿し直さないとデバイスが再認識されない。
 
-## バージョン整合性 (現時点 = 2026-10-11)
+## バージョン整合性 (現時点 = 2026-10-12)
 
-- protocol: **0.10.0** (v0.10.0 タグ済み。BRIDGE_REBOOT_BOOTLOADER 0x0C
+- protocol: **0.11.0** (v0.11.0 タグ済み。BRIDGE_LINK_INFO 0x0D→0x0E §6.4.7 を追加 —
+  ブリッジ (ESP32) が BLE リンクで実際に合意された connection interval / latency /
+  supervision timeout / MTU / PHY / RSSI と、要求値・接続直後の値・更新成否を自答する
+  診断用コマンド。CH32 の実装は不要 (未対応構成は UNKNOWN_COMMAND)。
+  0.10.0 = BRIDGE_REBOOT_BOOTLOADER 0x0C
   §6.4.6 を追加 — ブリッジ (ESP32) を ROM ダウンロードモードで再起動させる開発者向け
   コマンド。マジック "BOT" 必須。ブリッジ自答なので CH32 の実装は不要。無印 ESP32 は非対応。
   CH32 が申告する protocol_version の 0.10 追従は、knownLatest=0.10 のアプリ (v1.8.0〜)
   が行き渡ってから firmware で行う。
   0.9.0 = TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード、v0.9.0 タグ済み)
-- firmware: **v1.2.1** (protocol 0.9 申告のまま。タグ済み。**FM TOWNS での MSX マウス
+- firmware: **v1.3.0** (protocol 0.9 申告のまま。タグ済み。ESP32 ブリッジが
+  BRIDGE_LINK_INFO を BLE / USB 両経路で自答 (`platforms/esp32/main/main.c`)。
+  iPhone で BLE の入力遅延が報告されたことへの診断用。CH32 は版数のみ更新。
+  v1.2.1 = **FM TOWNS での MSX マウス
   モード修正** = (1) STROBE 立ち上がり直後に DMA が D0-D3 を複数本同時に LOW へ落とすと
   STROBE 入力に回り込んで偽エッジになり、DMA ポインタがずれて Y に X が読まれていた
   (右移動が斜め右下になる)。MSX マウスモード時のみ TIM2 入力キャプチャにデジタル
@@ -105,7 +112,16 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
   上げると knownLatest=0.9 の現行アプリ全版で接続ごとに「新しいプロトコル」警告が出るため。
   0.10 追従は knownLatest=0.10 の app v1.8.0 が行き渡ってから。Web フラッシャーは v1.2.0 未満の bin を
   削除済みで、`docs/firmware/{index,esp32}.html` の `MIN_VERSION` で一覧から除外している)
-- app: **v1.8.0** (pubspec を 1.8.0+33 に更新、**タグ未**。TestFlight 検証待ち。
+- app: **v1.9.0** (1.9.0+34、v1.9.0 タグ済み。**通信診断画面** (`lib/link_diagnostics_page.dart`)
+  を追加 = デバイス一覧カードの 📶 から、HEART_BEAT の往復時間 200 回 (20〜40ms ランダム間隔)
+  と BRIDGE_LINK_INFO (ブリッジ単体の往復 + リンク合意値) を計測し、英語固定書式の
+  レポートをコピーできる。knownLatest=0.11。開発者の iPhone 15 Pro (iOS 27) では
+  interval 30→15ms 受理 / 2M PHY / RTT 中央値 32ms で、報告者の遅延は未再現
+  (報告者の計測結果待ち)。v1.8.0 は未タグのまま v1.9.0 に包含。
+  **ローカルの iOS ビルドは Xcode 27 だと deployment target 13.0 がエラーになる**ため
+  `DEVELOPER_DIR=/Applications/Xcode-16.4.app/Contents/Developer` を付けてビルドし、
+  `xcrun devicectl device install app` で実機へ入れる)
+- app v1.8.0 (旧, 未タグ): pubspec 1.8.0+33。
   protocol 0.10 対応 (knownLatest=0.10、機能対応は不要で版数のみ)、minMinor=7。**macOS のリモート入力とゲームパッド背景動作**を追加 =
   別アプリ (RetroCastX) の画面を見ながら X68000 を操作できるようにする。
   (a) `gamepads_darwin` フォークで `shouldMonitorBackgroundEvents` を有効化し、
