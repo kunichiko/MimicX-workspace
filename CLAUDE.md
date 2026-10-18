@@ -82,7 +82,7 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
 `~/.platformio/packages/tool-wchisp/wchisp` (PlatformIO 同梱、PATH には入っていない)。
 書き込み完了後は USB を一度挿し直さないとデバイスが再認識されない。
 
-## バージョン整合性 (現時点 = 2026-10-12)
+## バージョン整合性 (現時点 = 2026-10-18)
 
 - protocol: **0.11.0** (v0.11.0 タグ済み。BRIDGE_LINK_INFO 0x0D→0x0E §6.4.7 を追加 —
   ブリッジ (ESP32) が BLE リンクで実際に合意された connection interval / latency /
@@ -94,7 +94,14 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
   CH32 が申告する protocol_version の 0.10 追従は、knownLatest=0.10 のアプリ (v1.8.0〜)
   が行き渡ってから firmware で行う。
   0.9.0 = TOWNS パッド RUN/SELECT = note 21/22 + SOCD ガード、v0.9.0 タグ済み)
-- firmware: **v1.3.0** (protocol 0.9 申告のまま。タグ済み。ESP32 ブリッジが
+- firmware: **v1.3.1** (タグ済み。ESP32 ブリッジが BLE 接続間隔の更新要求を拒否
+  (CONN_UPDATE status≠0) されたら 11.25-15ms → 15ms 固定 → 15-30ms の順に再要求する。
+  iOS 26.6.1 のテスターで 11.25-15ms が 0x3B で拒否され 30ms (RTT 中央値 56ms) の
+  ままだったため。macOS / iOS 27 は先頭候補を受理。`-DMIMICX_CONN_LADDER_TEST=1` で
+  拒否される 11.25ms 固定を先頭に足してフォールバックを確認できる (iOS 27 で確認済み)。
+  ローカルビルド時は CH32 の `ch32_*_i2c.bin` を版数更新後に作り直すこと (古いと
+  毎起動で CH32 を再書込し、IDENTIFY の fw が古く出る)。
+  v1.3.0 = protocol 0.9 申告のまま。ESP32 ブリッジが
   BRIDGE_LINK_INFO を BLE / USB 両経路で自答 (`platforms/esp32/main/main.c`)。
   iPhone で BLE の入力遅延が報告されたことへの診断用。CH32 は版数のみ更新。
   v1.2.1 = **FM TOWNS での MSX マウス
