@@ -122,13 +122,25 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
   上げると knownLatest=0.9 の現行アプリ全版で接続ごとに「新しいプロトコル」警告が出るため。
   0.10 追従は knownLatest=0.10 の app v1.8.0 が行き渡ってから。Web フラッシャーは v1.2.0 未満の bin を
   削除済みで、`docs/firmware/{index,esp32}.html` の `MIN_VERSION` で一覧から除外している)
-- app: **v1.9.0** (1.9.0+34、v1.9.0 タグ済み。**通信診断画面** (`lib/link_diagnostics_page.dart`)
+- app: **v1.9.1** (1.9.1+35、v1.9.1 タグ済み。**挿し直したアダプタの LED が黄のまま残る
+  問題を修正** = 識別結果を device id でキャッシュしているため (v1.4.0〜, Android の再スキャン
+  無限ループ対策)、起動中に抜き差し / 電源入れ直ししたアダプタへ IDENTIFY が送られず
+  WAITING (黄) のままだった (ファームは無関係、緑は起動直後の初回スキャンだけ)。
+  一覧から消えた識別済み id を stale にして再登場時に識別し直す。ただし前回識別から
+  **10 秒未満は再識別しない** — Android BLE は自分の disconnect で onDeviceRemoved が
+  discoveredDevices からも消し、広告の再受信ですぐ戻るので、これを抜き差し扱いすると
+  ループが再発する。バックグラウンド (paused/hidden) 復帰時も全 stale 化 (iOS は裏で
+  挿抜を観測できない。macOS のフォーカス移動 = inactive は対象外)。再スキャンボタンは
+  キャッシュ/クールダウン無視で全識別。Android (USB+BLE 同時) / macOS (再スキャン) 確認済み。
+  あわせて **最小 macOS を 12.0 に引き上げ** (Xcode 27 が 10.15 をエラーにする)。
+  1.9.0 は審査通過済みのため同版数は TestFlight に上げられない (ITMS-90062)
+- app v1.9.0 (旧): 1.9.0+34。**通信診断画面** (`lib/link_diagnostics_page.dart`)
   を追加 = デバイス一覧カードの 📶 から、HEART_BEAT の往復時間 200 回 (20〜40ms ランダム間隔)
   と BRIDGE_LINK_INFO (ブリッジ単体の往復 + リンク合意値) を計測し、英語固定書式の
   レポートをコピーできる。knownLatest=0.11。開発者の iPhone 15 Pro (iOS 27) では
   interval 30→15ms 受理 / 2M PHY / RTT 中央値 32ms で、報告者の遅延は未再現
   (報告者の計測結果待ち)。v1.8.0 は未タグのまま v1.9.0 に包含。
-  v1.9.0 リリース後に main で **最小 iOS を 15.0 に引き上げ済み (未リリース)** =
+  v1.9.1 で **最小 iOS を 15.0 に引き上げ** =
   ITMS-90068 (2027-04 以降 15.0 未満は提出不可) 対応 + Xcode 27 が 13.0 をエラーに
   するため。実機へは `fvm flutter build ios --release` → `xcrun devicectl device install app`)
 - app v1.8.0 (旧, 未タグ): pubspec 1.8.0+33。
