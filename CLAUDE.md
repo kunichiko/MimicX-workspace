@@ -82,7 +82,7 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
 `~/.platformio/packages/tool-wchisp/wchisp` (PlatformIO 同梱、PATH には入っていない)。
 書き込み完了後は USB を一度挿し直さないとデバイスが再認識されない。
 
-## バージョン整合性 (現時点 = 2026-10-18)
+## バージョン整合性 (現時点 = 2026-11-24)
 
 - protocol: **0.11.0** (v0.11.0 タグ済み。BRIDGE_LINK_INFO 0x0D→0x0E §6.4.7 を追加 —
   ブリッジ (ESP32) が BLE リンクで実際に合意された connection interval / latency /
@@ -122,7 +122,14 @@ DFU 検出までリトライするので操作タイミングに余裕がある�
   上げると knownLatest=0.9 の現行アプリ全版で接続ごとに「新しいプロトコル」警告が出るため。
   0.10 追従は knownLatest=0.10 の app v1.8.0 が行き渡ってから。Web フラッシャーは v1.2.0 未満の bin を
   削除済みで、`docs/firmware/{index,esp32}.html` の `MIN_VERSION` で一覧から除外している)
-- app: **v1.9.1** (1.9.1+35、v1.9.1 タグ済み。**挿し直したアダプタの LED が黄のまま残る
+- app: **v1.10.0** (1.10.0+36、v1.10.0 タグ済み、4 環境で確認済み。**X68000 キーボードの
+  接続直後のゴミ文字 (`^[P^[P`) を修正** = LED 状態の同期に INS を 2 回押していたが、
+  Human68k では INS が ESC P を発生するため `login:` 等に入力されていた。文字を発生しない
+  CAPS の 2 回押しに変更 (`_syncLedState`)。あわせて **Xcode 27 対応** (Flutter 3.44.8、
+  CI の iOS/macOS を `xcode-27`) と **Swift PM 未対応プラグインの解消** (iOS のゲームパッドを
+  gamepads_ios → gamepads_darwin、universal_ble を Package.swift 追加フォークへ)。
+  App Store の 1.9.1 は未提出だったため、Xcode 更新を機に minor を上げて 1.9.1 を包含)
+- app v1.9.1 (旧): (1.9.1+35、v1.9.1 タグ済み。**挿し直したアダプタの LED が黄のまま残る
   問題を修正** = 識別結果を device id でキャッシュしているため (v1.4.0〜, Android の再スキャン
   無限ループ対策)、起動中に抜き差し / 電源入れ直ししたアダプタへ IDENTIFY が送られず
   WAITING (黄) のままだった (ファームは無関係、緑は起動直後の初回スキャンだけ)。
